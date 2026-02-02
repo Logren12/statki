@@ -1,4 +1,3 @@
 # statki
 
 ### Instrukcja użytkowania
-
