@@ -1,36 +1,36 @@
 class Ship:
     """Class representing a ship."""
 
-    def __init__(self, ship_type: int):
-        if ship_type == 1:
+    def __init__(self, ship_type_on_create: int):
+        if ship_type_on_create == 1:
             self.ship_type = "Sloop"
             self.hull = 2
             self.hold = 1
             self.sails = 2
             self.canons = 1
             self.crew = 2
-        elif ship_type == 2:
+        elif ship_type_on_create == 2:
             self.ship_type = "Fluyt"
             self.hull = 2
             self.hold = 2
             self.sails = 1
             self.canons = 1
             self.crew = 2
-        elif ship_type == 3:
+        elif ship_type_on_create == 3:
             self.ship_type = "Frigate"
             self.hull = 3
             self.hold = 3
             self.sails = 3
             self.canons = 3
             self.crew = 3
-        elif ship_type == 4:
+        elif ship_type_on_create == 4:
             self.ship_type = "Galleon"
             self.hull = 3
             self.hold = 5
             self.sails = 4
             self.canons = 3
             self.crew = 4
-        elif ship_type == 5:
+        elif ship_type_on_create == 5:
             self.ship_type = "Ship of the line"
             self.hull = 5
             self.hold = 5

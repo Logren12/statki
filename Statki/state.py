@@ -4,33 +4,39 @@ from Captain import Captain
 from Ship import Ship
 
 
-def game_init():
+def game_init(
+    player_name: str = "",
+    nationality: str = "",
+    ship: int = 1,
+    console: bool = False,  # if True allows to enter player's info via console
+) -> list[Captain]:
     """Initializes the game by asking for player's name, nationality, and ship type and creating list of players."""
-    player = input("Enter your name:\n")
-    nationality = ""
-    while nationality == "":
-        nationality = input(
-            "Pick your nationality (1 - French, 2 - English, 3 - Dutch, 4 - Spanish):\n"
-        )
-        if nationality not in ["1", "2", "3", "4"]:
-            print("Invalid input. Try again.")
-            nationality = ""
-        else:
-            if nationality == "1":
-                nationality = "French"
-            elif nationality == "2":
-                nationality = "English"
-            elif nationality == "3":
-                nationality = "Dutch"
-            elif nationality == "4":
-                nationality = "Spanish"
+    if console:
+        player = input("Enter your name:\n")
+        nationality = ""
+        while nationality == "":
+            nationality = input(
+                "Pick your nationality (1 - French, 2 - English, 3 - Dutch, 4 - Spanish):\n"
+            )
+            if nationality not in ["1", "2", "3", "4"]:
+                print("Invalid input. Try again.")
+                nationality = ""
+            else:
+                if nationality == "1":
+                    nationality = "French"
+                elif nationality == "2":
+                    nationality = "English"
+                elif nationality == "3":
+                    nationality = "Dutch"
+                elif nationality == "4":
+                    nationality = "Spanish"
 
     players = []
-    players.append(Captain(player, nationality, 4, 1, 2, Ship(4)))
-    players.append(Captain("John", "English", 3, 3, 3, Ship(3)))
-    players.append(Captain("Marine", "French", 4, 3, 3, Ship(2)))
-    players.append(Captain("Erik", "Dutch", 5, 4, 3, Ship(3)))
-    players.append(Captain("Vanessa", "Spanish", 4, 5, 3, Ship(4)))
+    players.append(Captain(player_name, nationality, 4, 1, 2, Ship(ship), False))
+    players.append(Captain("John", "English", 3, 3, 3, Ship(3), True))
+    players.append(Captain("Marine", "French", 4, 3, 3, Ship(2), True))
+    players.append(Captain("Erik", "Dutch", 5, 4, 3, Ship(3), True))
+    players.append(Captain("Vanessa", "Spanish", 4, 5, 3, Ship(4), True))
     return players
 
 

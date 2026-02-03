@@ -1,10 +1,23 @@
 import os
+import time
+from tkinter import *
+from tkinter import ttk
 
 import state
+from battle_gui import Battle_GUI
+from gui import startGUI
 
-os.system("clear")
-players = state.game_init()
-os.system("clear")
+# console:
+# os.system("clear")
+# players = state.game_init(console=True)
+# os.system("clear")
+
+# gui:
+root = Tk()
+a = startGUI(root)
+root.mainloop()
+players = state.game_init(a.name.get(), a.nationality.get(), a.ship.get())
+
 print("Players:")
 for player in players:
     print(player)
@@ -20,6 +33,8 @@ def game():
         print("Ship found!\n")
         decision = Player.attack_decision(players[1])
         if decision:
+            root = Tk()
+            Battle_GUI(root, Player, players[1])
             result = state.battle(Player, players[1])
             if result == 1:
                 print(f"{Player.name} destroyed {players[1].name}'s ship!")

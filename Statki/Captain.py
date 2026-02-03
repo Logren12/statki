@@ -14,6 +14,7 @@ class Captain:
         leadership: int,
         reconnaissance: int,
         ship: Ship,
+        isbot: bool = True,
     ):
         self.name = name
         self.nationality = nationality
@@ -21,6 +22,7 @@ class Captain:
         self.reconnaissance = reconnaissance
         self.leadership = leadership
         self.ship = ship
+        self.__isbot = isbot
 
     def __str__(self):
         return (
@@ -85,6 +87,18 @@ class Captain:
 
     # battle interactions:
     def battle_declaration(self):
+        """Declared manouver in next turn. Asks user for input: 1,2 or 3 and returns it as int."""
+
+        # for bots:
+        if self.__isbot:
+            if self.ship.canons > 0:
+                return 1
+            elif self.ship.crew <= 0:
+                return 3
+            else:
+                return 2
+
+        # for humans:
         decision = 0
         while decision not in [1, 2, 3]:
             try:
@@ -130,19 +144,26 @@ class Captain:
             elif (
                 die == 5 or die == 6
             ):  # for any skull (5 or 6) in enemy roll, captain may pick damage location herself
-                flag = True
-                while flag:
-                    try:
-                        location = int(
-                            input(f"\r{self.name}, pick damage location (1-4):\n")
-                        )
-                        if location in [1, 2, 3, 4]:
-                            flag = False
-                            locations.append(location)
-                        else:
+                # for bots
+                if self.__isbot:
+                    location = random.randint(1, 4)
+                    locations.append(location)
+
+                # for humans:
+                if not self.__isbot:
+                    flag = True
+                    while flag:
+                        try:
+                            location = int(
+                                input(f"\r{self.name}, pick damage location (1-4):\n")
+                            )
+                            if location in [1, 2, 3, 4]:
+                                flag = False
+                                locations.append(location)
+                            else:
+                                print("Wrong input, try again.")
+                        except ValueError:
                             print("Wrong input, try again.")
-                    except ValueError:
-                        print("Wrong input, try again.")
 
         print(f"\r{self.name} damage locations: {locations}")
         for location in locations:
