@@ -1,54 +1,45 @@
-import os
-import time
 from tkinter import *
 from tkinter import ttk
 
-import state
-from battle_gui import Battle_GUI
-from gui import startGUI
-
-# console:
-# os.system("clear")
-# players = state.game_init(console=True)
-# os.system("clear")
-
-# gui:
-root = Tk()
-a = startGUI(root)
-root.mainloop()
-players = state.game_init(a.name.get(), a.nationality.get(), a.ship.get())
-
-print("Players:")
-for player in players:
-    print(player)
-Player = players[0]
+import game_utils
+from GameGUI import GameGUI
+from StartGUI import StartGUI
 
 
 def game():
+    root = Tk()
+    a = StartGUI(root)
+    root.mainloop()
+    if a.isok_text.get() != "OK":
+        print("Game canceled")
+        return 0
+    else:
+        Player = game_utils.player_setup(
+            False, a.name.get(), str(a.nationality.get()), a.ship.get()
+        )
+    players = game_utils.game_init(Player)
+    Player = players[0]
+
     while True:
-        search = Player.search()
-        if not search:
-            print("No ships found!")
-            return 0
-        print("Ship found!\n")
-        decision = Player.attack_decision(players[1])
-        if decision:
+        result = 0
+        while result == 0:
+            print("Staring new battle!")
             root = Tk()
-            Battle_GUI(root, Player, players[1])
-            result = state.battle(Player, players[1])
-            if result == 1:
-                print(f"{Player.name} destroyed {players[1].name}'s ship!")
-                players.remove(players[1])
-                Player.ship.repair()
-            elif result == 2:
-                print(f"{players[1].name} destroyed Your ship! Game over!")
-                return 0
-            elif result == 3:
-                pass
-            elif result == 4:
-                print("Both captains sunk! Game over!")
-                return 0
+            round = GameGUI(root, Player, players[1])
+            root.mainloop()
+            result = round.result.get()
+        if result == 1:
+            print(f"{Player.name} destroyed {players[1].name}'s ship!")
+            players.remove(players[1])
+            Player.ship.repair()
+        elif result == 2:
+            print(f"{players[1].name} destroyed Your ship! Game over!")
+            return 0
+        elif result == 3:
+            pass
+        elif result == 4:
+            print("Both captains sunk! Game over!")
+            return 0
 
 
-while True:
-    game()
+game()

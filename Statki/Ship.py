@@ -1,3 +1,6 @@
+import random
+
+
 class Ship:
     """Class representing a ship."""
 
@@ -47,13 +50,39 @@ class Ship:
 
     def __str__(self):
         return (
-            f"Type: {self.ship_type}\n"
-            f"   Hull:   {self.hull * '*'}\n"
-            f" 1 Hold:   {self.hold * '*'}\n"
-            f" 2 Sails:  {self.sails * '*'}\n"
-            f" 3 Canons: {self.canons * '*'}\n"
-            f" 4 Crew:   {self.crew * '*'}\n"
+            f"type: {self.ship_type}\n"
+            f"   Hull:   {self.hull * '♥'}\n"
+            f" 1 Hold:   {self.hold * '♥'}\n"
+            f" 2 Sails:  {self.sails * '♥'}\n"
+            f" 3 Canons: {self.canons * '♥'}\n"
+            f" 4 Crew:   {self.crew * '♥'}\n"
         )
+
+    def receive_damage(self, locations: list[int]):
+        """Distributes damage from enemy cannons."""
+        for location in locations:
+            if location == 1:
+                if self.hold > 0:
+                    self.hold -= 1
+                else:
+                    self.hull -= 1
+            elif location == 2:
+                if self.sails > 0:
+                    self.sails -= 1
+                else:
+                    self.hull -= 1
+            elif location == 3:
+                if self.canons > 0:
+                    self.canons -= 1
+                else:
+                    self.hull -= 1
+            elif location == 4:
+                if self.crew > 0:
+                    self.crew -= 1
+                else:
+                    self.hull -= 1
+            else:
+                pass
 
     def is_destroyed(self):
         if self.hull <= 0:
