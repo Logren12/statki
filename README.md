@@ -1,5 +1,5 @@
 # statki
-
+NOTE TO SELF: ctrl+F TODO
 ### Instrukcja użytkowania
 ### Przebieg gry:
 1. Wybranie statku oraz narodowości kapitana

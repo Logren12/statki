@@ -69,36 +69,9 @@ class Captain:
         output += " ]"
         return output
 
-    # battle interactions:
-    def battle_declaration(self):
-        """Declared manouver in next turn. Asks user for input: 1,2 or 3 and returns it as int."""
-
-        # for bots:
-        if self.__isbot:
-            if self.ship.canons > 0:
-                return 1
-            else:
-                return 2
-
-        # for humans:
-        decision = 0
-        while decision not in [1, 2, 3]:
-            try:
-                print(f"{self.name} declare intent:")
-                decision = int(
-                    input(" 1 - fire canons\n 2 - attempt boarding\n 3 - flee\n")
-                )
-                if decision not in [1, 2, 3]:
-                    print("Wrong input, try again.")
-            except ValueError:
-                print("Wrong input, try again.")
-
-        return decision
-
     def crew_attack(self) -> int:
         """Determines damage dealt by crew members to enemy crew during one round of crew fight."""
         roll = self.roll(self.leadership)
-        print(self.skulify_roll(roll))
         damage = 0
         for dice in roll:
             if dice in [5, 6] and damage < self.ship.crew:

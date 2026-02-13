@@ -1,3 +1,4 @@
+from multiprocessing import Lock
 from tkinter import *
 from tkinter import messagebox, ttk
 
@@ -85,11 +86,11 @@ class GameGUI:
         root.bind("3", self.board)
         root.bind("<Escape>", self.quit)
 
+    # GUI FUNCTIONS:
     def quit(self, *args):
         self.result.set(2)
         self.root.destroy()
 
-    # *args wymagane, bo root.bind() zwraca też siebie jako argument.
     def fire(self, *args):
         self.declaration.set(1)
         self.result.set(self.battle())
@@ -106,22 +107,34 @@ class GameGUI:
         self.end_round()
 
     def end_round(self):
+        """Aktualizuje informacje o statkach. Jeżeli któryś z graczy został zatopiony,
+        wyświetla okienko z informacją o wyniku rundy."""
+
+        self.update_message("Round over!")
         # updating ships' status
         self.ship1.set(str(self.player.ship))
         self.ship2.set(str(self.enemy.ship))
 
+        battle_over_message = ""
         if self.result.get() == 1:
-            messagebox.showinfo(
-                "showinfo", f"{self.player.name} destroyed {self.enemy.name}'s ship!"
-            )
-            self.update_message(
-                f"{self.player.name} destroyed {self.enemy.name}'s ship!"
-            )
+            battle_over_message = f"{self.player.name} destroyed {self.enemy.name}!"
+        elif self.result.get() == 2:
+            battle_over_message = f"{self.enemy.name} destroyed {self.player.name}!"
+        elif self.result.get() == 3:
+            battle_over_message = f"{self.player.name} managed to escape!"
+        else:  # result ==4
+            battle_over_message = "Everyone died! :("
+
         if self.result.get() != 0:
-            self.update_message("Round over!")
-            messagebox.showinfo("showinfo", "Round over!")
+            messagebox.showinfo(
+                title="Battle over",
+                message="Battle over!",
+                detail=battle_over_message,
+                icon="info",
+            )
             self.root.destroy()
 
+    # IN BATTLE FUNCTIONS:
     def update_message(self, new_message):
         """Works like equivalent to print() but game log. Appends new_message to battle_log after newline."""
         self.battle_log.set(f"{self.battle_log.get()}\n {new_message}")
@@ -149,21 +162,43 @@ class GameGUI:
                 score += 1
         return score
 
+    def end_battle_check(self) -> int:
+        """Checks, whether any ship is destroyed. Returns 0 if battle should continue, 1 if player wins, 2 if enemy wins, and 4 if both ships are destroyed"""
+        if self.player.ship.is_destroyed() and self.enemy.ship.is_destroyed():
+            self.update_message("Both ships were destroyed! Game over!")
+            return 4
+        if self.enemy.ship.is_destroyed():
+            self.update_message(
+                f"{self.player.name} destroyed {self.enemy.name}'s ship!"
+            )
+            return 1
+        if self.player.ship.is_destroyed():
+            self.update_message(
+                f"{self.enemy.name} destroyed {self.player.name}'s ship!"
+            )
+            return 2
+        else:
+            return 0
+
     def battle(self) -> int:
         """Simulates a round of battle between two captains."""
+
+        # check whether the battle should be over already:
+        if self.end_battle_check() != 0:
+            return self.end_battle_check()
+
         self.round_number.set(self.round_number.get() + 1)
         self.round_number_text.set(f"VS\nRound: {self.round_number.get()}")
         self.battle_log.set(f"Round {self.round_number.get()} begins!")
-        outcome = 0
-        player_decision = self.declaration.get()
-        enemy_decision = self.enemy.battle_declaration()
 
-        if enemy_decision == 1:
+        # declaration phase - each Captain declares their intention:
+        player_decision = self.declaration.get()
+        if self.enemy.ship.canons > 0:
+            enemy_decision = 1
             self.update_message(f"{self.enemy.name} decided to fire cannons!")
-        elif enemy_decision == 2:
-            self.update_message(f"{self.enemy.name} decided to aboard our ship!")
         else:
-            self.update_message(f"{self.enemy.name} decided to flee!")
+            enemy_decision = 2
+            self.update_message(f"{self.enemy.name} decided to aboard our ship!")
 
         # manouvering phase - each Captain rolls for sailing:
         player_roll = self.manouver(self.player)
@@ -192,19 +227,18 @@ class GameGUI:
             self.update_message("Draw!")
             winner_decision = 0
 
+        # battle phase:
         if winner_decision == 1:
             damage_to_loser = winner.fire_canons(winner.ship.canons)
 
             if loser_decision == 1 and loser_score != 0:
                 damage_to_winner = loser.fire_canons(loser_score)
-
                 self.update_message(
                     f"{winner.name} fires canons: {winner.skulify_roll(damage_to_loser)}"
                 )
                 self.update_message(
                     f"{loser.name} fires canons: {loser.skulify_roll(damage_to_winner)}"
                 )
-
                 loser.ship.receive_damage(damage_to_loser)
                 winner.ship.receive_damage(damage_to_winner)
 
@@ -216,10 +250,11 @@ class GameGUI:
 
         elif winner_decision == 2:
             self.update_message("Crew fight begins!")
-            outcome = self.crew_fight()
+            return self.crew_fight()
 
         elif winner_decision == 3:
             self.update_message(f"{winner.name} managed to escape!")
+            return 3
         else:  # draw
             damage_to_player = []
             damage_to_enemy = []
@@ -236,17 +271,7 @@ class GameGUI:
             self.enemy.ship.receive_damage(damage_to_enemy)
             self.player.ship.receive_damage(damage_to_player)
 
-        # checking whether any ship is destroyed
-        if self.enemy.ship.is_destroyed():
-            outcome = 1
-        if self.player.ship.is_destroyed():
-            outcome = 2
-        if self.player.ship.is_destroyed() and self.enemy.ship.is_destroyed():
-            outcome = 4
-        if not (self.player.ship.is_destroyed() or self.enemy.ship.is_destroyed()):
-            outcome = 0
-
-        return outcome
+        return self.end_battle_check()
 
     def capture_ship(self):
         "Player's ship type changes to defeated enemy's ship type if player's ship level is lower."
@@ -258,23 +283,33 @@ class GameGUI:
 
     def crew_fight(self) -> int:
         """Captains fight until one of them loses all crew. Returns 1 if captain1 won, and 2 if captain2 won. Player may capture enemy's ship."""
+        player_damage_log = []
+        enemy_damage_log = []
 
         while self.player.ship.crew > 0 and self.enemy.ship.crew > 0:
-            damage1 = self.player.crew_attack()
-            damage2 = self.enemy.crew_attack()
-            self.update_message(f"captain1 damage: {damage1}")
-            self.update_message(f"captain2 damage: {damage2}")
-            self.player.ship.crew -= damage2
-            self.enemy.ship.crew -= damage1
+            player_damage = self.player.crew_attack()
+            enemy_damage = self.enemy.crew_attack()
 
-        if self.enemy.ship.crew <= 0:
+            self.player.ship.crew -= enemy_damage
+            self.enemy.ship.crew -= player_damage
+            player_damage_log.append(player_damage)
+            enemy_damage_log.append(enemy_damage)
+
+        self.update_message(f"{self.player.name} damage: {player_damage_log}")
+        self.update_message(f"{self.enemy.name} damage: {enemy_damage_log}")
+
+        if self.enemy.ship.crew <= 0 and self.player.ship.crew <= 0:
+            self.update_message("Draw - everyone died :)")
+            return 4
+        elif self.enemy.ship.crew <= 0:
             self.update_message(f"{self.player.name} won the crew fight!")
             self.capture_ship()
-            self.enemy.ship.hull = 0
+            self.enemy.ship.hull = 0  # TODO
             return 1
         elif self.player.ship.crew <= 0:
             self.update_message(f"{self.enemy.name} won the crew fight!")
-            self.player.ship.hull = 0
+            self.player.ship.hull = 0  # TODO
             return 2
         else:
+            # it will never happen - above conditions are exhaustive
             return 4
