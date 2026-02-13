@@ -1,28 +1,27 @@
 from tkinter import *
 from tkinter import ttk
 
-import game_utils
 from GameGUI import GameGUI
 from StartGUI import StartGUI
 
 
 def game():
     root = Tk()
-    a = StartGUI(root)
+    init_info = StartGUI(root)
     root.mainloop()
-    if a.isok_text.get() != "OK":
+    if init_info.isok_text.get() != "OK":
         print("Game canceled")
         return 0
     else:
-        Player = game_utils.player_setup(
-            False, a.name.get(), str(a.nationality.get()), a.ship.get()
-        )
-    players = game_utils.game_init(Player)
-    Player = players[0]
+        players = init_info.players
+        Player = players[0]
 
     while True:
         result = 0
         while result == 0:
+            if len(players) == 1:
+                print("You won!")
+                return 0
             print("Staring new battle!")
             root = Tk()
             round = GameGUI(root, Player, players[1])

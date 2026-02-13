@@ -20,7 +20,7 @@ def player_setup(
         player_nationality = ""
         while player_nationality == "":
             player_nationality = input(
-                "Pick your nationality (1 - French, 2 - English, 3 - Dutch, 4 - Spanish):\n"
+                "Pick your nationality (1 - French, 2 - British, 3 - Dutch, 4 - Spanish):\n"
             )
             if player_nationality not in ["1", "2", "3", "4"]:
                 print("Invalid input. Try again.")
@@ -28,12 +28,12 @@ def player_setup(
     if player_nationality == "1":
         player_nationality = "French"
     elif player_nationality == "2":
-        player_nationality = "English"
+        player_nationality = "British"
     elif player_nationality == "3":
         player_nationality = "Dutch"
     elif player_nationality == "4":
         player_nationality = "Spanish"
-    return Captain(player_name, player_nationality, 3, 3, Ship(player_ship), False)
+    return Captain(player_name, player_nationality, Ship(player_ship), False)
 
 
 def game_init(player: Captain) -> list[Captain]:
@@ -41,11 +41,11 @@ def game_init(player: Captain) -> list[Captain]:
 
     players = []
     players.append(player)
-    players.append(Captain("John", "English", 2, 2, Ship(1), True))
-    players.append(Captain("Marine", "French", 3, 3, Ship(2), True))
-    players.append(Captain("Erik", "Dutch", 4, 4, Ship(3), True))
-    players.append(Captain("Vanessa", "Spanish", 5, 5, Ship(4), True))
-    players.append(Captain("Donald Truck", "American", 1, 6, Ship(5), True))
+    players.append(Captain("Marine", "French", Ship(1), True))
+    players.append(Captain("John", "British", Ship(2), True))
+    players.append(Captain("Erik", "Dutch", Ship(3), True))
+    players.append(Captain("Vanessa", "Spanish", Ship(4), True))
+    players.append(Captain("Donald Truck", "American", Ship(5), True))
     return players
 
 

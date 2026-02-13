@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 
+from Captain import Captain
+from Ship import Ship
+
 
 class StartGUI:
     """Gui handling the beginning of the game."""
@@ -8,104 +11,165 @@ class StartGUI:
     def __init__(self, root):
         # variables:
         self.name = StringVar()
-        self.nationality = IntVar()
+        self.nationality = StringVar()
         self.ship = IntVar()
         self.isok_text = StringVar()
-        self.nationality.set(1)
+        self.nationality_modifiers = StringVar()
+        self.players = []
         self.ship.set(1)
+        self.nationality.set("British")
+        self.update_modifiers()
 
         # tkk elements:
         root.title("Statki")
-        mainframe = ttk.Frame(root, padding=(12, 12, 12, 12))
-        mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        main_frame = ttk.Frame(root, padding=(12, 12, 12, 12))
+        main_frame.grid(column=0, row=0, sticky=(N, W, E, S))
 
-        nationalityframe = ttk.Frame(mainframe)
+        nationality_frame = ttk.Frame(main_frame)
         french = ttk.Radiobutton(
-            nationalityframe, text="French", variable=self.nationality, value=1
+            nationality_frame,
+            text="French",
+            variable=self.nationality,
+            value="French",
+            command=self.update_modifiers,
         )
-        english = ttk.Radiobutton(
-            nationalityframe, text="English", variable=self.nationality, value=2
+        british = ttk.Radiobutton(
+            nationality_frame,
+            text="British",
+            variable=self.nationality,
+            value="British",
+            command=self.update_modifiers,
         )
         dutch = ttk.Radiobutton(
-            nationalityframe, text="Dutch", variable=self.nationality, value=3
+            nationality_frame,
+            text="Dutch",
+            variable=self.nationality,
+            value="Dutch",
+            command=self.update_modifiers,
         )
         spanish = ttk.Radiobutton(
-            nationalityframe, text="Spanish", variable=self.nationality, value=4
+            nationality_frame,
+            text="Spanish",
+            variable=self.nationality,
+            value="Spanish",
+            command=self.update_modifiers,
         )
 
-        shipframe = ttk.Frame(mainframe)
-        sloop = ttk.Radiobutton(shipframe, text="sloop", variable=self.ship, value=1)
-        fluyt = ttk.Radiobutton(shipframe, text="Flyut", variable=self.ship, value=2)
+        ship_frame = ttk.Frame(main_frame)
+        sloop = ttk.Radiobutton(ship_frame, text="Sloop", variable=self.ship, value=1)
+        fluyt = ttk.Radiobutton(ship_frame, text="Flyut", variable=self.ship, value=2)
         frigate = ttk.Radiobutton(
-            shipframe, text="frigate", variable=self.ship, value=3
+            ship_frame, text="Frigate", variable=self.ship, value=3
         )
-        next = ttk.Button(mainframe, text="Next", command=self.check)
-        name_entry = ttk.Entry(mainframe, width=7, textvariable=self.name)
-        name = ttk.Label(mainframe, text="name:")
-        nationality = ttk.Label(mainframe, text="nationality:")
-        ship = ttk.Label(mainframe, text="ship:")
-        isok = ttk.Label(mainframe, textvariable=self.isok_text)
+        galleon = ttk.Radiobutton(
+            ship_frame, text="Galleon", variable=self.ship, value=4
+        )
+        ship_of_the_line = ttk.Radiobutton(
+            ship_frame, text="Ship of the Line", variable=self.ship, value=5
+        )
+
+        next = ttk.Button(main_frame, text="Next", command=self.check)
+        name_entry = ttk.Entry(main_frame, width=7, textvariable=self.name)
+        name = ttk.Label(main_frame, text="name:")
+        nationality = ttk.Label(main_frame, text="nationality:")
+        modifiers_label = ttk.Label(main_frame, text="nationality modifier:")
+        modifiers = ttk.Label(main_frame, textvariable=self.nationality_modifiers)
+        ship = ttk.Label(main_frame, text="ship:")
+        isok = ttk.Label(main_frame, textvariable=self.isok_text)
 
         # elements' placement:
         name.grid(column=1, row=1, sticky=(W, E))
         name_entry.grid(column=2, row=1, sticky=(W, E))
         nationality.grid(column=1, row=2, sticky=(W, E))
-        nationalityframe.grid(column=2, row=2, sticky=(W, E))
-        ship.grid(column=1, row=3, sticky=(W, E))
-        shipframe.grid(column=2, row=3, sticky=(N, S, W, E))
-        isok.grid(column=1, row=4, sticky=(W, E))
-        next.grid(column=2, row=4, sticky=(W, E))
+        nationality_frame.grid(column=2, row=2, sticky=(W, E))
+        modifiers_label.grid(column=1, row=3, sticky=W)
+        modifiers.grid(column=2, row=3)
+        ship.grid(column=1, row=4, sticky=(W, E))
+        ship_frame.grid(column=2, row=4, sticky=(N, S, W, E))
+        isok.grid(column=1, row=5, sticky=(W, E))
+        next.grid(column=2, row=5, sticky=(W, E))
 
-        # ship frame elements' placement:
-        sloop.grid(column=1, row=0, sticky=(W))
-        fluyt.grid(column=2, row=0)
-        frigate.grid(column=3, row=0, sticky=(E))
-
-        # nationality elements placement:
-        french.grid(column=1, row=0)
-        english.grid(column=2, row=0)
+        # nationality_frame elements' placement:
+        french.grid(column=1, row=0, sticky=W)
+        british.grid(column=2, row=0)
         dutch.grid(column=3, row=0)
-        spanish.grid(column=4, row=0)
+        spanish.grid(column=4, row=0, sticky=E)
+
+        # ship_frame elements' placement:
+        sloop.grid(column=1, row=0, sticky=W)
+        fluyt.grid(column=2, row=0)
+        frigate.grid(column=3, row=0)
+        galleon.grid(column=4, row=0)
+        ship_of_the_line.grid(column=5, row=0, sticky=E)
 
         # placement config:
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
-        mainframe.columnconfigure(1, weight=1)
-        mainframe.columnconfigure(2, weight=1)
-        mainframe.columnconfigure(3, weight=1)
-        mainframe.rowconfigure(1, weight=1)
-        mainframe.rowconfigure(2, weight=1)
-        mainframe.rowconfigure(3, weight=1)
+        main_frame.columnconfigure(1, weight=1)
+        main_frame.columnconfigure(2, weight=1)
+        main_frame.columnconfigure(3, weight=1)
+        main_frame.rowconfigure(1, weight=1)
+        main_frame.rowconfigure(2, weight=1)
+        main_frame.rowconfigure(3, weight=1)
+        main_frame.rowconfigure(4, weight=1)
 
-        shipframe.rowconfigure(0, weight=1)
-        shipframe.columnconfigure(1, weight=1)
-        shipframe.columnconfigure(2, weight=1)
-        shipframe.columnconfigure(3, weight=1)
+        ship_frame.rowconfigure(0, weight=1)
+        ship_frame.columnconfigure(1, weight=1)
+        ship_frame.columnconfigure(2, weight=1)
+        ship_frame.columnconfigure(3, weight=1)
+        ship_frame.columnconfigure(4, weight=1)
+        ship_frame.columnconfigure(5, weight=1)
 
-        nationalityframe.rowconfigure(0, weight=1)
-        nationalityframe.columnconfigure(1, weight=1)
-        nationalityframe.columnconfigure(2, weight=1)
-        nationalityframe.columnconfigure(3, weight=1)
-        nationalityframe.columnconfigure(4, weight=1)
+        nationality_frame.rowconfigure(0, weight=1)
+        nationality_frame.columnconfigure(1, weight=1)
+        nationality_frame.columnconfigure(2, weight=1)
+        nationality_frame.columnconfigure(3, weight=1)
+        nationality_frame.columnconfigure(4, weight=1)
 
-        for child in mainframe.winfo_children():
+        for child in main_frame.winfo_children():
             child.grid_configure(padx=5, pady=5)
-        for child in shipframe.winfo_children():
+        for child in ship_frame.winfo_children():
             child.grid_configure(padx=5, pady=5)
-        for child in nationalityframe.winfo_children():
+        for child in nationality_frame.winfo_children():
             child.grid_configure(padx=5, pady=5)
         name_entry.focus()
         root.bind("<Return>", self.check)
         self.root = root
         root.wait_window()
 
+    def update_modifiers(self):
+        if self.nationality.get() == "French":
+            self.nationality_modifiers.set("1 ⎈ | 4 ⚔")
+        elif self.nationality.get() == "British":
+            self.nationality_modifiers.set("4 ⎈ | 1 ⚔")
+        elif self.nationality.get() == "Dutch":
+            self.nationality_modifiers.set("3 ⎈ | 2 ⚔")
+        elif self.nationality.get() == "Spanish":
+            self.nationality_modifiers.set("2 ⎈ | 3 ⚔")
+
+    def game_init(self):
+        """Creates a list of players."""
+        players = []
+        players.append(
+            Captain(
+                self.name.get(), self.nationality.get(), Ship(self.ship.get()), False
+            )
+        )
+        players.append(Captain("Marine", "French", Ship(1), True))
+        players.append(Captain("John", "British", Ship(2), True))
+        players.append(Captain("Erik", "Dutch", Ship(3), True))
+        players.append(Captain("Vanessa", "Spanish", Ship(4), True))
+        players.append(Captain("Donald Truck", "American", Ship(5), True))
+        self.players = players
+
     def check(self, *args):
         if self.name.get() == "":
             self.isok_text.set("Name is required")
-        elif self.nationality.get() not in [1, 2, 3, 4]:
+        elif self.nationality.get() not in ["French", "British", "Dutch", "Spanish"]:
             self.isok_text.set("Nationality is required")
-        elif self.ship.get() not in [1, 2, 3]:
+        elif self.ship.get() not in [1, 2, 3, 4, 5]:
             self.isok_text.set("Ship is required")
         else:
             self.isok_text.set("OK")
+            self.game_init()
             self.root.destroy()

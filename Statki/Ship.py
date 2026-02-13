@@ -1,13 +1,10 @@
-import random
-
-
 class Ship:
     """Class representing a ship."""
 
     def __init__(self, ship_type_on_create: int):
         if ship_type_on_create == 1:
             self.ship_type = "Sloop"
-            self.hull = 2
+            self.hull = 1
             self.hold = 1
             self.sails = 2
             self.canons = 1
@@ -17,7 +14,7 @@ class Ship:
             self.hull = 2
             self.hold = 2
             self.sails = 1
-            self.canons = 1
+            self.canons = 2
             self.crew = 2
         elif ship_type_on_create == 3:
             self.ship_type = "Frigate"
@@ -28,9 +25,9 @@ class Ship:
             self.crew = 3
         elif ship_type_on_create == 4:
             self.ship_type = "Galleon"
-            self.hull = 3
+            self.hull = 4
             self.hold = 5
-            self.sails = 4
+            self.sails = 3
             self.canons = 3
             self.crew = 4
         elif ship_type_on_create == 5:
@@ -57,6 +54,20 @@ class Ship:
             f" 3 Canons: {self.canons * '♥'}\n"
             f" 4 Crew:   {self.crew * '♥'}\n"
         )
+
+    def determine_ship_level(self) -> int:
+        if self.ship_type == "Sloop":
+            return 1
+        elif self.ship_type == "Fluyt":
+            return 2
+        elif self.ship_type == "Frigate":
+            return 3
+        elif self.ship_type == "Galleon":
+            return 4
+        elif self.ship_type == "Ship of the line":
+            return 5
+        else:
+            return 0
 
     def receive_damage(self, locations: list[int]):
         """Distributes damage from enemy cannons."""

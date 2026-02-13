@@ -10,24 +10,40 @@ class Captain:
         self,
         name: str,
         nationality: str,
-        sailing: int,
-        leadership: int,
         ship: Ship,
         isbot: bool = True,
     ):
         self.name = name
         self.nationality = nationality
-        self.sailing = sailing
-        self.leadership = leadership
         self.ship = ship
         self.__isbot = isbot
+
+        if nationality == "British":
+            self.nationality = "🇬🇧"
+            self.sailing = 4
+            self.leadership = 1
+        elif nationality == "French":
+            self.nationality = "🇫🇷"
+            self.sailing = 1
+            self.leadership = 4
+        elif nationality == "Dutch":
+            self.nationality = "🇳🇱"
+            self.sailing = 3
+            self.leadership = 2
+        elif nationality == "Spanish":
+            self.nationality = "🇪🇸"
+            self.sailing = 2
+            self.leadership = 3
+        else:
+            self.sailing = 1
+            self.leadership = 6
 
     def __str__(self):
         return (
             f"Captain {self.name}\n"
             f"Nationality: {self.nationality}\n"
-            f"Sailing: {self.sailing}\n"
-            f"Leadership: {self.leadership}\n"
+            f"Sailing: {self.sailing * '⎈'}\n"
+            f"Leadership: {self.leadership * '⚔'}\n"
             f"Ship: {self.ship.ship_type}\n"
         )
 
@@ -61,8 +77,6 @@ class Captain:
         if self.__isbot:
             if self.ship.canons > 0:
                 return 1
-            elif self.ship.crew <= 0:
-                return 3
             else:
                 return 2
 
@@ -92,7 +106,7 @@ class Captain:
         return damage
 
     def fire_canons(self, number: int) -> list[int]:
-        """Fires cannons - returns a list of dice rolls that represent the enemy locations hit."""
+        """Fires cannons - returns a list representing enemy locations hit."""
         roll = []
         if self.ship.canons >= number:
             roll = self.roll(number)  # fires no more than number cannons
@@ -108,8 +122,7 @@ class Captain:
             elif (
                 die == 5 or die == 6
             ):  # for any skull (5 or 6) in enemy roll, damage is randomly asigned.
-                location = random.randint(1, 4)
-                locations.append(location)
+                locations.append(random.randint(1, 4))
             else:
                 pass
         return locations
