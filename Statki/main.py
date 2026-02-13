@@ -7,36 +7,36 @@ from StartGUI import StartGUI
 
 def game():
     root = Tk()
-    init_info = StartGUI(root)
+    player_information = StartGUI(root)
     root.mainloop()
-    if init_info.isok_text.get() != "OK":
+    if player_information.isok_text.get() != "OK":
         print("Game canceled")
         return 0
     else:
-        players = init_info.players
+        players = player_information.players
         Player = players[0]
 
     while True:
         result = 0
         while result == 0:
             if len(players) == 1:
-                print("You won!")
+                print("Congratulations! You won!")
                 return 0
-            print("Staring new battle!")
+            print("Starting new battle!")
             root = Tk()
             round = GameGUI(root, Player, players[1])
             root.mainloop()
             result = round.result.get()
-        if result == 1:
+        if result == 1:  # enemy defeated
             print(f"{Player.name} destroyed {players[1].name}'s ship!")
             players.remove(players[1])
             Player.ship.repair()
-        elif result == 2:
+        elif result == 2:  # player defeated
             print(f"{players[1].name} destroyed Your ship! Game over!")
             return 0
-        elif result == 3:
-            pass
-        elif result == 4:
+        elif result == 3:  # player escaped
+            Player.ship.repair()
+        elif result == 4:  # player and enemy destroyed each other
             print("Both captains sunk! Game over!")
             return 0
 

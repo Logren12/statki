@@ -16,15 +16,19 @@ class StartGUI:
         self.isok_text = StringVar()
         self.nationality_modifiers = StringVar()
         self.players = []
-        self.ship.set(1)
+
+        # initialize default values:
+        self.ship.set(3)
         self.nationality.set("British")
         self.update_modifiers()
 
-        # tkk elements:
+        # tkk elements (in order of appearance):
         root.title("Statki")
         main_frame = ttk.Frame(root, padding=(12, 12, 12, 12))
         main_frame.grid(column=0, row=0, sticky=(N, W, E, S))
-
+        name_label = ttk.Label(main_frame, text="name:")
+        name_entry = ttk.Entry(main_frame, width=7, textvariable=self.name)
+        nationality_label = ttk.Label(main_frame, text="nationality:")
         nationality_frame = ttk.Frame(main_frame)
         french = ttk.Radiobutton(
             nationality_frame,
@@ -54,7 +58,9 @@ class StartGUI:
             value="Spanish",
             command=self.update_modifiers,
         )
-
+        modifiers_label = ttk.Label(main_frame, text="nationality modifier:")
+        modifiers_text = ttk.Label(main_frame, textvariable=self.nationality_modifiers)
+        ship_label = ttk.Label(main_frame, text="ship:")
         ship_frame = ttk.Frame(main_frame)
         sloop = ttk.Radiobutton(ship_frame, text="Sloop", variable=self.ship, value=1)
         fluyt = ttk.Radiobutton(ship_frame, text="Flyut", variable=self.ship, value=2)
@@ -68,26 +74,20 @@ class StartGUI:
             ship_frame, text="Ship of the Line", variable=self.ship, value=5
         )
 
-        next = ttk.Button(main_frame, text="Next", command=self.check)
-        name_entry = ttk.Entry(main_frame, width=7, textvariable=self.name)
-        name = ttk.Label(main_frame, text="name:")
-        nationality = ttk.Label(main_frame, text="nationality:")
-        modifiers_label = ttk.Label(main_frame, text="nationality modifier:")
-        modifiers = ttk.Label(main_frame, textvariable=self.nationality_modifiers)
-        ship = ttk.Label(main_frame, text="ship:")
-        isok = ttk.Label(main_frame, textvariable=self.isok_text)
+        isok_label = ttk.Label(main_frame, textvariable=self.isok_text)
+        next_button = ttk.Button(main_frame, text="Next", command=self.check)
 
         # elements' placement:
-        name.grid(column=1, row=1, sticky=(W, E))
+        name_label.grid(column=1, row=1, sticky=(W, E))
         name_entry.grid(column=2, row=1, sticky=(W, E))
-        nationality.grid(column=1, row=2, sticky=(W, E))
+        nationality_label.grid(column=1, row=2, sticky=(W, E))
         nationality_frame.grid(column=2, row=2, sticky=(W, E))
         modifiers_label.grid(column=1, row=3, sticky=W)
-        modifiers.grid(column=2, row=3)
-        ship.grid(column=1, row=4, sticky=(W, E))
+        modifiers_text.grid(column=2, row=3)
+        ship_label.grid(column=1, row=4, sticky=(W, E))
         ship_frame.grid(column=2, row=4, sticky=(N, S, W, E))
-        isok.grid(column=1, row=5, sticky=(W, E))
-        next.grid(column=2, row=5, sticky=(W, E))
+        isok_label.grid(column=1, row=5, sticky=(W, E))
+        next_button.grid(column=2, row=5, sticky=(W, E))
 
         # nationality_frame elements' placement:
         french.grid(column=1, row=0, sticky=W)
@@ -138,6 +138,7 @@ class StartGUI:
         root.wait_window()
 
     def update_modifiers(self):
+        """Updates the modifiers_text based on the selected nationality."""
         if self.nationality.get() == "French":
             self.nationality_modifiers.set("1 ⎈ | 4 ⚔")
         elif self.nationality.get() == "British":
@@ -147,7 +148,7 @@ class StartGUI:
         elif self.nationality.get() == "Spanish":
             self.nationality_modifiers.set("2 ⎈ | 3 ⚔")
 
-    def game_init(self):
+    def players_setup(self):
         """Creates a list of players."""
         players = []
         players.append(
@@ -171,5 +172,5 @@ class StartGUI:
             self.isok_text.set("Ship is required")
         else:
             self.isok_text.set("OK")
-            self.game_init()
+            self.players_setup()
             self.root.destroy()

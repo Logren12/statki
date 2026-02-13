@@ -79,7 +79,7 @@ class Captain:
         return damage
 
     def fire_canons(self, number: int) -> list[int]:
-        """Fires cannons - returns a list representing enemy locations hit."""
+        """Returns a list representing enemy locations hit by cannon fire."""
         roll = []
         if self.ship.canons >= number:
             roll = self.roll(number)  # fires no more than number cannons

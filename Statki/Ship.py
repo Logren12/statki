@@ -4,46 +4,17 @@ class Ship:
     def __init__(self, ship_type_on_create: int):
         if ship_type_on_create == 1:
             self.ship_type = "Sloop"
-            self.hull = 1
-            self.hold = 1
-            self.sails = 2
-            self.canons = 1
-            self.crew = 2
         elif ship_type_on_create == 2:
             self.ship_type = "Fluyt"
-            self.hull = 2
-            self.hold = 2
-            self.sails = 1
-            self.canons = 2
-            self.crew = 2
         elif ship_type_on_create == 3:
             self.ship_type = "Frigate"
-            self.hull = 3
-            self.hold = 3
-            self.sails = 3
-            self.canons = 3
-            self.crew = 3
         elif ship_type_on_create == 4:
             self.ship_type = "Galleon"
-            self.hull = 4
-            self.hold = 5
-            self.sails = 3
-            self.canons = 3
-            self.crew = 4
         elif ship_type_on_create == 5:
             self.ship_type = "Ship of the line"
-            self.hull = 5
-            self.hold = 5
-            self.sails = 5
-            self.canons = 5
-            self.crew = 5
         else:
             self.ship_type = "Sloop"
-            self.hull = 2
-            self.hold = 2
-            self.sails = 1
-            self.canons = 1
-            self.crew = 2
+        self.repair()
 
     def __str__(self):
         return (
@@ -102,6 +73,7 @@ class Ship:
             return False
 
     def repair(self):
+        """Checks the ship's type and sets its attributes accordingly."""
         if self.ship_type == "Sloop":
             self.hull = 2
             self.hold = 1
@@ -112,7 +84,7 @@ class Ship:
             self.hull = 2
             self.hold = 2
             self.sails = 1
-            self.canons = 1
+            self.canons = 2
             self.crew = 2
         elif self.ship_type == "Frigate":
             self.hull = 3
@@ -121,9 +93,9 @@ class Ship:
             self.canons = 3
             self.crew = 3
         elif self.ship_type == "Galleon":
-            self.hull = 3
+            self.hull = 4
             self.hold = 5
-            self.sails = 4
+            self.sails = 3
             self.canons = 3
             self.crew = 4
         elif self.ship_type == "Ship of the line":
