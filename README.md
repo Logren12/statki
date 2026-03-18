@@ -1,4 +1,7 @@
-# Instrukcja gry
+# Statki
+Celem projektu było zaznajomienie się z funkcjonowaniem klas w pythonie i biblioteki tkinter. 
+
+## Instrukcja gry
 
 ### Przebieg gry:
 1. Wybranie statku oraz narodowości kapitana. Narodowość wpływa na umiejętności żeglarstwa(⎈) oraz dowodzenia (⚔).
