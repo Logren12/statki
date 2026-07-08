@@ -9,12 +9,18 @@ Celem projektu było zaznajomienie się z funkcjonowaniem klas w pythonie i bibl
 3. Naprawa statku gracza
 4. Punkt 2.
 
-### Przebieg bitwy:
-1. Gracze deklarują swoje działania w przyszłej rundzie. Może to być ucieczka, ostrzał lub abordaż.
-2. Gracze rzucają liczbą kości odpowiadającą ich umiejętności żeglarstwa (⎈). Zliczona jest ilość sukcesów (5 i 6), reprezentowanych przez czaszki.
-3. Wygrana - Jeśli kapitan, który wygrał, wybrał ostrzał, strzela wszystkimi dostępnymi działami. Jeśli wybrał abordaż, rozpoczyna się starcie załogi. Jeśli wybrał ucieczkę, udaje mu się uciec.
-  Remis - jeżeli kapitan wybrał ostrzał, strzela tyloma działami, ile wyrzucił sukcesów. Jeżeli kapitan wybrał abordaż lub ucieczkę, nic się nie dzieje.
-  Porażka - Tak jak w przypadku remisu.
+### Przebieg rundy:
+Każda runda dzieli się na trzy fazy: fazę deklaracji, fazę manewrów i fazę rozliczeń.
+
+1. Faza deklaracji: Gracze deklarują swoje działania w przyszłej rundzie. Może to być ucieczka, ostrzał lub abordaż.
+
+2.Faza manewrowania: Obaj Kapitanowie rzucają na żeglarstwo (⎈). Wygrywa ten, który wyrzucił większą ilość sukcesów (5 i 6) reprezentowanych przez czaszki. Dodatkowo, jeśli jakiś kapitan ma zniszczone żagle, rzuca maksymalnie jedną kostką.
+
+3. Faza rozliczeń: Determinowany jest typ starcia. Jeśli wygrany gracz chciał abordażu, zaczyna się bitwa załogi. Jeśli wygrany gracz chce uciekać, udaje mu się uciec. Jeśli wygrany gracz chciał strzelać z dział dzieje się jedno z poniższych:
+a) przegrany chciał uciekać lub dokonać abordażu: wygrany strzela do przegranego ze wszystkich dział i runda się kończy
+b) przegrany chciał strzelać: wygrany strzela do przegranego ze wszystkich dział, a przegrany strzela do wygranego z tylu dział, ile wyrzucił sukcesów.
+
+Gracze strzelają do siebie równocześnie. W takim wypadku naliczanie obrażeń dzieje się po strzelaniu. W przypadku remisu, jeśli któryś z Kapitanów chciał strzelać, strzela z tylu dział, ile wyrzucił sukcesów. W pozostałych przypadkach nic się nie dzieje.
 
 ### Starcie załogi:
 1. Gracze rzucają liczbą kości odpowiadającą ich umiejętności dowodzenia(⚔). Zliczona jest ilość sukcesów (5 i 6), reprezentowanych przez czaszki.
