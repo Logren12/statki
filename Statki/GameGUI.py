@@ -239,7 +239,7 @@ class GameGUI:
         if winner_decision == 1:
             damage_to_loser = winner.fire_canons(winner.ship.canons)
 
-            if loser_decision == 1 and loser_score != 0:
+            if loser_decision == 1 and loser_score >= 1:
                 damage_to_winner = loser.fire_canons(loser_score)
                 self.log_update(
                     f"{winner.name} fires canons: {winner.skulify_roll(damage_to_loser)}"

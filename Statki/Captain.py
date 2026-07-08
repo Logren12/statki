@@ -2,6 +2,12 @@ import random
 
 from Ship import Ship
 
+NATIONALITIES = {
+    "British": ["🇬🇧",4,1],
+    "French": ["🇫🇷",1,4],
+    "Dutch": ["🇳🇱",3,2],
+    "Spanish": ["🇪🇸",2,3]
+}
 
 class Captain:
     """Class representing a captain (player or bot)."""
@@ -17,26 +23,10 @@ class Captain:
         self.nationality = nationality
         self.ship = ship
         self.__isbot = isbot
-
-        if nationality == "British":
-            self.nationality = "🇬🇧"
-            self.sailing = 4
-            self.leadership = 1
-        elif nationality == "French":
-            self.nationality = "🇫🇷"
-            self.sailing = 1
-            self.leadership = 4
-        elif nationality == "Dutch":
-            self.nationality = "🇳🇱"
-            self.sailing = 3
-            self.leadership = 2
-        elif nationality == "Spanish":
-            self.nationality = "🇪🇸"
-            self.sailing = 2
-            self.leadership = 3
-        else:
-            self.sailing = 1
-            self.leadership = 6
+        nation_data = NATIONALITIES.get(nationality, ["🏳️", 1, 6])
+        self.nationality = nation_data[0]
+        self.sailing = nation_data[1]
+        self.leadership = nation_data[2]
 
     def __str__(self):
         return (

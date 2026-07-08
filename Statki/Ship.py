@@ -1,17 +1,17 @@
 class Ship:
-    """Class representing a ship."""
+    SHIP_TYPES = {
+        "Sloop": (2, 1, 2, 1, 2),
+        "Fluyt": (2, 2, 1, 2, 2),
+        "Frigate": (3, 3, 3, 3, 3),
+        "Galleon": (4, 5, 3, 3, 4),
+        "Ship of the line": (5, 5, 5, 5, 5)
+    }
+
+    SHIP_LEVELS = ["Sloop", "Fluyt", "Frigate", "Galleon", "Ship of the line"]
 
     def __init__(self, ship_type_on_create: int):
-        if ship_type_on_create == 1:
-            self.ship_type = "Sloop"
-        elif ship_type_on_create == 2:
-            self.ship_type = "Fluyt"
-        elif ship_type_on_create == 3:
-            self.ship_type = "Frigate"
-        elif ship_type_on_create == 4:
-            self.ship_type = "Galleon"
-        elif ship_type_on_create == 5:
-            self.ship_type = "Ship of the line"
+        if 1 <= ship_type_on_create <= len(self.SHIP_LEVELS):
+            self.ship_type = self.SHIP_LEVELS[ship_type_on_create - 1]
         else:
             self.ship_type = "Sloop"
         self.repair()
@@ -27,16 +27,8 @@ class Ship:
         )
 
     def determine_ship_level(self) -> int:
-        if self.ship_type == "Sloop":
-            return 1
-        elif self.ship_type == "Fluyt":
-            return 2
-        elif self.ship_type == "Frigate":
-            return 3
-        elif self.ship_type == "Galleon":
-            return 4
-        elif self.ship_type == "Ship of the line":
-            return 5
+        if self.ship_type in self.SHIP_LEVELS:
+            return self.SHIP_LEVELS.index(self.ship_type) + 1
         else:
             return 0
 
@@ -74,33 +66,5 @@ class Ship:
 
     def repair(self):
         """Checks the ship's type and sets its attributes accordingly."""
-        if self.ship_type == "Sloop":
-            self.hull = 2
-            self.hold = 1
-            self.sails = 2
-            self.canons = 1
-            self.crew = 2
-        elif self.ship_type == "Fluyt":
-            self.hull = 2
-            self.hold = 2
-            self.sails = 1
-            self.canons = 2
-            self.crew = 2
-        elif self.ship_type == "Frigate":
-            self.hull = 3
-            self.hold = 3
-            self.sails = 3
-            self.canons = 3
-            self.crew = 3
-        elif self.ship_type == "Galleon":
-            self.hull = 4
-            self.hold = 5
-            self.sails = 3
-            self.canons = 3
-            self.crew = 4
-        elif self.ship_type == "Ship of the line":
-            self.hull = 5
-            self.hold = 5
-            self.sails = 5
-            self.canons = 5
-            self.crew = 5
+        stats = self.SHIP_TYPES.get(self.ship_type, self.SHIP_TYPES["Sloop"])
+        self.hull, self.hold, self.sails, self.canons, self.crew = stats
