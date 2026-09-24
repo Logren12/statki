@@ -1,5 +1,4 @@
 # Statki
-Celem projektu było zaznajomienie się z funkcjonowaniem klas w pythonie i biblioteki tkinter. 
 
 ## Instrukcja gry
 
