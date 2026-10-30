@@ -1,6 +1,6 @@
 class Ship:
     SHIP_TYPES = {
-        "Sloop": (2, 1, 2, 1, 2),
+        "Sloop": (2, 1, 2, 1, 2), # Hull, Hold, Sails, Crew, Canons
         "Fluyt": (2, 2, 1, 2, 2),
         "Frigate": (3, 3, 3, 3, 3),
         "Galleon": (4, 5, 3, 3, 4),

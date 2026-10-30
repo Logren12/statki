@@ -20,7 +20,6 @@ class Captain:
         isbot: bool = True,
     ):
         self.name = name
-        self.nationality = nationality
         self.ship = ship
         self.__isbot = isbot
         nation_data = NATIONALITIES.get(nationality, ["🏳️", 1, 6])
