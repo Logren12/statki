@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox, ttk
 
-from Captain import Captain
+from statki.captain import Captain
 
 
 class GameGUI:
@@ -47,7 +47,7 @@ class GameGUI:
 
         # buttons:
         flee_button = ttk.Button(main_frame, text="1 - Flee!", command=self.flee)
-        fire_button = ttk.Button(main_frame, text="2 - Fire canons!", command=self.fire)
+        fire_button = ttk.Button(main_frame, text="2 - Fire cannons!", command=self.fire)
         board_button = ttk.Button(main_frame, text="3 - Board!", command=self.board)
 
         # placement:
@@ -187,7 +187,7 @@ class GameGUI:
 
         # declaration phase - each Captain declares their intention:
         player_decision = self.declaration.get()
-        if self.enemy.ship.canons > 0:
+        if self.enemy.ship.cannons > 0:
             enemy_decision = 1
             self.log_update(f"{self.enemy.name} decided to fire cannons!")
         else:
@@ -222,14 +222,14 @@ class GameGUI:
             damage_to_player = []
             damage_to_enemy = []
             if player_decision == 1 and player_score > 0:
-                damage_to_enemy = self.player.fire_canons(player_score)
+                damage_to_enemy = self.player.fire_cannons(player_score)
                 self.log_update(
-                    f"{self.player.name} fires canons: {self.player.skulify_roll(damage_to_enemy)}"
+                    f"{self.player.name} fires cannons: {self.player.skulify_roll(damage_to_enemy)}"
                 )
             if enemy_decision == 1 and enemy_score > 0:
-                damage_to_player = self.enemy.fire_canons(enemy_score)
+                damage_to_player = self.enemy.fire_cannons(enemy_score)
                 self.log_update(
-                    f"{self.enemy.name} fires canons: {self.enemy.skulify_roll(damage_to_player)}"
+                    f"{self.enemy.name} fires cannons: {self.enemy.skulify_roll(damage_to_player)}"
                 )
             self.enemy.ship.receive_damage(damage_to_enemy)
             self.player.ship.receive_damage(damage_to_player)
@@ -237,22 +237,22 @@ class GameGUI:
 
         # applying the winner's decision:
         if winner_decision == 1:
-            damage_to_loser = winner.fire_canons(winner.ship.canons)
+            damage_to_loser = winner.fire_cannons(winner.ship.cannons)
 
             if loser_decision == 1 and loser_score >= 1:
-                damage_to_winner = loser.fire_canons(loser_score)
+                damage_to_winner = loser.fire_cannons(loser_score)
                 self.log_update(
-                    f"{winner.name} fires canons: {winner.skulify_roll(damage_to_loser)}"
+                    f"{winner.name} fires cannons: {winner.skulify_roll(damage_to_loser)}"
                 )
                 self.log_update(
-                    f"{loser.name} fires canons: {loser.skulify_roll(damage_to_winner)}"
+                    f"{loser.name} fires cannons: {loser.skulify_roll(damage_to_winner)}"
                 )
                 loser.ship.receive_damage(damage_to_loser)
                 winner.ship.receive_damage(damage_to_winner)
 
             else:
                 self.log_update(
-                    f"{winner.name} fires canons: {winner.skulify_roll(damage_to_loser)}"
+                    f"{winner.name} fires cannons: {winner.skulify_roll(damage_to_loser)}"
                 )
                 loser.ship.receive_damage(damage_to_loser)
 

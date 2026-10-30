@@ -1,8 +1,8 @@
 import random
 
-from Ship import Ship
+from statki.ship import Ship
 
-NATIONALITIES = {
+FACTIONS = {
     "British": ["🇬🇧",4,1],
     "French": ["🇫🇷",1,4],
     "Dutch": ["🇳🇱",3,2],
@@ -15,22 +15,22 @@ class Captain:
     def __init__(
         self,
         name: str,
-        nationality: str,
+        faction: str,
         ship: Ship,
         isbot: bool = True,
     ):
         self.name = name
         self.ship = ship
         self.__isbot = isbot
-        nation_data = NATIONALITIES.get(nationality, ["🏳️", 1, 6])
-        self.nationality = nation_data[0]
-        self.sailing = nation_data[1]
-        self.leadership = nation_data[2]
+        faction_data = FACTIONS.get(faction, ["🏳️", 1, 6])
+        self.faction = faction_data[0]
+        self.sailing = faction_data[1]
+        self.leadership = faction_data[2]
 
     def __str__(self):
         return (
             f"Captain {self.name}\n"
-            f"Nationality: {self.nationality}\n"
+            f"Faction: {self.faction}\n"
             f"Sailing: {self.sailing * '⎈'}\n"
             f"Leadership: {self.leadership * '⚔'}\n"
             f"Ship: {self.ship.ship_type}\n"
@@ -67,13 +67,13 @@ class Captain:
                 damage += 1
         return damage
 
-    def fire_canons(self, number: int) -> list[int]:
+    def fire_cannons(self, number: int) -> list[int]:
         """Returns a list representing enemy locations hit by cannon fire."""
         roll = []
-        if self.ship.canons >= number:
+        if self.ship.cannons >= number:
             roll = self.roll(number)  # fires no more than number cannons
-        elif (self.ship.canons < number) and (self.ship.canons != 0):
-            roll = self.roll(self.ship.canons)  # fires all available cannons
+        elif (self.ship.cannons < number) and (self.ship.cannons != 0):
+            roll = self.roll(self.ship.cannons)  # fires all available cannons
         else:
             return roll  # returns empty list if no cannons available
 

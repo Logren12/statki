@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 
-from GameGUI import GameGUI
-from StartGUI import StartGUI
+from statki.game_gui import GameGUI
+from statki.start_gui import StartGUI
 
 
 def game():
@@ -30,15 +30,16 @@ def game():
         if result == 1:  # enemy defeated
             print(f"{Player.name} destroyed {players[1].name}'s ship!")
             players.remove(players[1])
-            Player.ship.repair()
+            Player.ship.full_repair()
         elif result == 2:  # player defeated
             print(f"{players[1].name} destroyed Your ship! Game over!")
             return 0
         elif result == 3:  # player escaped
-            Player.ship.repair()
+            Player.ship.full_repair()
         elif result == 4:  # player and enemy destroyed each other
             print("Both captains sunk! Game over!")
             return 0
 
 
-game()
+if __name__ == "__main__":
+    game()

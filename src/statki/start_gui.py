@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 
-from Captain import Captain
-from Ship import Ship
+from statki.captain import Captain
+from statki.ship import Ship
 
 
 class StartGUI:

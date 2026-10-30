@@ -1,20 +1,21 @@
 class Ship:
     SHIP_TYPES = {
-        "Sloop": (2, 1, 2, 1, 2), # Hull, Hold, Sails, Crew, Canons
+        "Sloop": (2, 1, 2, 1, 2),  # Hull, Hold, Sails, Cannons, Crew
         "Fluyt": (2, 2, 1, 2, 2),
         "Frigate": (3, 3, 3, 3, 3),
         "Galleon": (4, 5, 3, 3, 4),
-        "Ship of the line": (5, 5, 5, 5, 5)
+        "Ship of the line": (5, 5, 5, 5, 5),
     }
 
     SHIP_LEVELS = ["Sloop", "Fluyt", "Frigate", "Galleon", "Ship of the line"]
+    COMPARTMENTS = {1: "hold", 2: "sails", 3: "cannons", 4: "crew"}
 
     def __init__(self, ship_type_on_create: int):
         if 1 <= ship_type_on_create <= len(self.SHIP_LEVELS):
             self.ship_type = self.SHIP_LEVELS[ship_type_on_create - 1]
         else:
             self.ship_type = "Sloop"
-        self.repair()
+        self.full_repair()
 
     def __str__(self):
         return (
@@ -22,7 +23,7 @@ class Ship:
             f"   Hull:   {self.hull * '♥'}\n"
             f" 1 Hold:   {self.hold * '♥'}\n"
             f" 2 Sails:  {self.sails * '♥'}\n"
-            f" 3 Canons: {self.canons * '♥'}\n"
+            f" 3 Cannons: {self.cannons * '♥'}\n"
             f" 4 Crew:   {self.crew * '♥'}\n"
         )
 
@@ -32,39 +33,25 @@ class Ship:
         else:
             return 0
 
+    def is_destroyed(self):
+        return self.hull <= 0
+
     def receive_damage(self, locations: list[int]):
         """Distributes damage from enemy cannons."""
+
         for location in locations:
-            if location == 1:
-                if self.hold > 0:
-                    self.hold -= 1
-                else:
-                    self.hull -= 1
-            elif location == 2:
-                if self.sails > 0:
-                    self.sails -= 1
-                else:
-                    self.hull -= 1
-            elif location == 3:
-                if self.canons > 0:
-                    self.canons -= 1
-                else:
-                    self.hull -= 1
-            elif location == 4:
-                if self.crew > 0:
-                    self.crew -= 1
-                else:
-                    self.hull -= 1
+            if location not in self.COMPARTMENTS:
+                raise ValueError(f"Invalid location: {location}")
+            if self.is_destroyed():
+                break
+            loc_name: str = self.COMPARTMENTS[location]
+            old_value = getattr(self, loc_name)
+            if old_value > 0:
+                setattr(self, loc_name, old_value - 1)
             else:
-                pass
+                self.hull -= 1
 
-    def is_destroyed(self):
-        if self.hull <= 0:
-            return True
-        else:
-            return False
-
-    def repair(self):
+    def full_repair(self):
         """Checks the ship's type and sets its attributes accordingly."""
         stats = self.SHIP_TYPES.get(self.ship_type, self.SHIP_TYPES["Sloop"])
-        self.hull, self.hold, self.sails, self.canons, self.crew = stats
+        self.hull, self.hold, self.sails, self.cannons, self.crew = stats
