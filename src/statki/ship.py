@@ -1,5 +1,7 @@
+from typing import ClassVar
+
 class Ship:
-    SHIP_TYPES = {
+    SHIP_TYPES: ClassVar[dict[str, tuple[int, int, int, int, int]]] = {
         "Sloop": (2, 1, 2, 1, 2),  # Hull, Hold, Sails, Cannons, Crew
         "Fluyt": (2, 2, 1, 2, 2),
         "Frigate": (3, 3, 3, 3, 3),
@@ -7,8 +9,9 @@ class Ship:
         "Ship of the line": (5, 5, 5, 5, 5),
     }
 
-    SHIP_LEVELS = ["Sloop", "Fluyt", "Frigate", "Galleon", "Ship of the line"]
-    COMPARTMENTS = {1: "hold", 2: "sails", 3: "cannons", 4: "crew"}
+    SHIP_LEVELS = ("Sloop", "Fluyt", "Frigate", "Galleon", "Ship of the line")
+
+    COMPARTMENTS: ClassVar[dict[int, str]] = {1: "hold", 2: "sails", 3: "cannons", 4: "crew"}
 
     def __init__(self, ship_type_on_create: int):
         if 1 <= ship_type_on_create <= len(self.SHIP_LEVELS):
